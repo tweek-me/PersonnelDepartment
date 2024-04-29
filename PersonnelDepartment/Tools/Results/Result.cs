@@ -1,6 +1,6 @@
 ﻿namespace PersonnelDepartment.Tools.Results;
 
-//TASK ILYA ДОДЕЛАТЬ КЛАСС
+//TASK ДОДЕЛАТЬ КЛАСС
 public class Result
 {
     public bool IsSuccess => Errors.Length == 0;
@@ -17,5 +17,5 @@ public class Result
 
     public static Result Fail(string message) => new Result(new Error(message));
     public static Result Fail(Error error) => new Result(error);
-    public static Result Fil(Error[] errors) => new Result(errors);
+    public static Result Fail(Error[] errors) => new Result(errors);
 }

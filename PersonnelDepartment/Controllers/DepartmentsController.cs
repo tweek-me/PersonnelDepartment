@@ -3,6 +3,7 @@ using PersonnelDepartment.Domain.Departments;
 using PersonnelDepartment.Domain.Posts;
 using PersonnelDepartment.Infrastructure;
 using PersonnelDepartment.Services.Departments;
+using PersonnelDepartment.Tools;
 using PersonnelDepartment.Tools.Results;
 
 namespace PersonnelDepartment.Controllers;
@@ -27,12 +28,11 @@ public class DepartmentsController : BaseController
         return _departmentService.SaveDepartment(departmentBlank);
     }
 
-    //TASK ILYA вернуть
-    //[HttpGet("/departments/getDepartmentsPage")]
-    //public Page<DepartmentStructure> GetDepartmentsPage(Int32 page, Int32 pageSize)
-    //{
-    //    return _departmentService.GetDepartments(page, pageSize);
-    //}
+    [HttpGet("/departments/getDepartmentsPage")]
+    public Page<DepartmentStructure> GetDepartmentsPage(Int32 page, Int32 pageSize)
+    {
+        return _departmentService.GetDepartmentStructure(page, pageSize);
+    }
 
     [HttpPost("/departments/removeDepartment")]
     public Result RemoveDepartment([FromBody] Guid id)

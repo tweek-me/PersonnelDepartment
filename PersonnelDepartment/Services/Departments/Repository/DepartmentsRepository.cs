@@ -3,6 +3,7 @@ using PersonnelDepartment.Domain.Departments;
 using PersonnelDepartment.Domain.Posts;
 using PersonnelDepartment.Services.Departments.Converters;
 using PersonnelDepartment.Services.Departments.Repository.Models;
+using PersonnelDepartment.Tools;
 using PersonnelDepartment.Tools.Database;
 
 namespace PersonnelDepartment.Services.Departments.Repository;
@@ -57,10 +58,26 @@ public class DepartmentsRepository : BaseRepository, IDepartmentsRepository
         return _mainConnector.Get<DepartmentDb?>(expression, parameters)?.ToDepartment();
     }
 
-    //public Page<Department> GetDepartments(Int32 page, Int32 pageSize)
-    //{
-    //    throw new NotImplementedException();
-    //}
+    public Page<Department> GetDepartments(Int32 page, Int32 pageSize)
+    {
+        (Int32 offset, Int32 limit) = NormalizeRange(page, pageSize);
+
+        String expression = """
+            SELECT * FROM departments
+            WHERE isremoved = FALSE
+            OFFSET @p_offset
+            LIMIT @p_limit
+            """;
+
+        NpgsqlParameter[] parameters =
+        {
+            new("p_offset", offset),
+            new("p_limit", limit)
+        };
+
+        Page<DepartmentDb> departmentPage = _mainConnector.GetPage<DepartmentDb>(expression, parameters);
+        return new Page<Department>(departmentPage.TotalRows, departmentPage.Values.ToDepartments());
+    }
 
     public void RemoveDepartment(Guid id)
     {
@@ -96,7 +113,7 @@ public class DepartmentsRepository : BaseRepository, IDepartmentsRepository
         NpgsqlParameter[] parameters =
         {
             new("p_id", postBlank.Id),
-            new("p_departmentid", postBlank.Departmentid),
+            new("p_departmentid", postBlank.DepartmentId),
             new("p_name", postBlank.Name),
             new("p_salary", postBlank.Salary),
             new("p_currentDateTimeUtc", DateTime.UtcNow),
@@ -119,6 +136,23 @@ public class DepartmentsRepository : BaseRepository, IDepartmentsRepository
         };
 
         return _mainConnector.Get<PostDb?>(expression, parameters)?.ToPost();
+    }
+
+    public Post[] GetPosts(Guid[] departmentIds)
+    {
+        String expression = """
+            SELECT * FROM posts
+            WHERE 
+                departmentid = ANY(@p_departmentIds)
+                AND isremoved = FALSE
+            """;
+
+        NpgsqlParameter[] parameters =
+        {
+            new("p_departmentIds", departmentIds)
+        };
+
+        return _mainConnector.GetList<PostDb>(expression, parameters).ToArray().ToPosts();
     }
 
     public void RemovePost(Guid id)
