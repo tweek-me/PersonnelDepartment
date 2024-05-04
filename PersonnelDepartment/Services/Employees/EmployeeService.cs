@@ -20,8 +20,6 @@ public class EmployeeService : IEmployeeService
         _departmentService = departmentService;
     }
 
-    #region Empoyees
-
     public Result SaveEmployee(EmployeeBlank employeeBlank)
     {
         Boolean isCreating = employeeBlank.Id is null;
@@ -108,6 +106,4 @@ public class EmployeeService : IEmployeeService
         _employeeRepository.RemoveEmployee(employeeId);
         return Result.Success();
     }
-
-    #endregion Empoyees
 }

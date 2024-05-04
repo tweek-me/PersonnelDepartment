@@ -10,7 +10,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         builder.Initialize(services =>
         {
-            builder.Services.AddControllers();
+            builder.Services.AddControllersWithViews();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.Initialize();
@@ -25,9 +25,11 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        app.UseRouting();
+
+        app.UseStaticFiles();
         app.UseHttpsRedirection();
-        app.UseAuthorization();
-        app.MapControllers();
+        app.UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute());
 
         app.Run();
     }
