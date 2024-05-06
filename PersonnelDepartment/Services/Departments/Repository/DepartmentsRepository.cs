@@ -58,6 +58,16 @@ public class DepartmentsRepository : BaseRepository, IDepartmentsRepository
         return _mainConnector.Get<DepartmentDb?>(expression, parameters)?.ToDepartment();
     }
 
+    public Department[] GetDepartments()
+    {
+        String expression = """
+                            SELECT * FROM departments
+                            WHERE isremoved = FALSE
+                            """;
+
+        return _mainConnector.GetList<DepartmentDb>(expression).ToArray().ToDepartments();
+    }
+
     public Page<Department> GetDepartments(Int32 page, Int32 pageSize)
     {
         (Int32 offset, Int32 limit) = NormalizeRange(page, pageSize);
@@ -136,6 +146,21 @@ public class DepartmentsRepository : BaseRepository, IDepartmentsRepository
         };
 
         return _mainConnector.Get<PostDb?>(expression, parameters)?.ToPost();
+    }
+
+    public Post[] GetPosts(Guid departmentId)
+    {
+        String expression = """
+                            SELECT * FROM posts
+                            WHERE departmentid = @p_departmentId AND isremoved = FALSE
+                            """;
+
+        NpgsqlParameter[] parameters =
+        {
+            new("p_departmentId", departmentId)
+        };
+
+        return _mainConnector.GetList<PostDb>(expression, parameters).ToArray().ToPosts();
     }
 
     public Post[] GetPosts(Guid[] departmentIds)

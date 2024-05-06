@@ -3,10 +3,11 @@
 public class EmployeeDb
 {
     public Guid Id { get; set; }
+    public Guid DepartmentId { get; set; }
     public Guid PostId { get; set; }
     public String Name { get; set; }
     public String Surname { get; set; }
-    public String Partronymic { get; set; }
+    public String Patronymic { get; set; }
     public String PhoneNumber { get; set; }
     public String? Email { get; set; }
     public String Inn { get; set; }

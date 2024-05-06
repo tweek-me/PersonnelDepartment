@@ -8,8 +8,8 @@ public static class EmployeeConverter
     public static Employee ToEmployee(this EmployeeDb db)
     {
         return new Employee(
-            db.Id, db.PostId, db.Name, db.Surname, db.Partronymic, db.PhoneNumber,
-            db.Email, db.Inn, db.Snils, db.PassportSeries, db.PassportNumber,
+            db.Id, db.DepartmentId, db.PostId, db.Name, db.Surname, db.Patronymic,
+            db.PhoneNumber, db.Email, db.Inn, db.Snils, db.PassportSeries, db.PassportNumber,
             db.BirthDay, db.IsDismissed
         );
     }

@@ -25,14 +25,14 @@ public class EmployeesController : BaseController
         return _employeeService.SaveEmployee(employeeBlank);
     }
 
-    //[HttpGet("/employees/get")]
-    //public Employee? GetEmployee(Guid id)
-    //{
-    //    return _employeeService.GetEmployee(id);
-    //}
+    [HttpGet("/employees/get")]
+    public Employee? GetEmployee(Guid id)
+    {
+        return _employeeService.GetEmployee(id);
+    }
 
     [HttpGet("/employees/getPage")]
-    public Page<Employee> GetEmployee(Int32 page, Int32 pageSize)
+    public Page<Employee> GetEmployeesPage(Int32 page, Int32 pageSize)
     {
         return _employeeService.GetEmployeesPage(page, pageSize);
     }

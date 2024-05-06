@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PersonnelDepartment.Domain.Departments;
-using PersonnelDepartment.Domain.Posts;
 using PersonnelDepartment.Infrastructure;
 using PersonnelDepartment.Services.Departments;
 using PersonnelDepartment.Tools;
@@ -20,12 +19,16 @@ public class DepartmentsController : BaseController
     [HttpGet("/departments")]
     public IActionResult Index() => ReactApp();
 
-    #region Departments
-
     [HttpPost("/departments/saveDepartment")]
     public Result SaveDepartment([FromBody] DepartmentBlank departmentBlank)
     {
         return _departmentService.SaveDepartment(departmentBlank);
+    }
+
+    [HttpGet("/departments/getDepartments")]
+    public Department[] GetDepartments()
+    {
+        return _departmentService.GetDepartments();
     }
 
     [HttpGet("/departments/getDepartmentsPage")]
@@ -39,22 +42,4 @@ public class DepartmentsController : BaseController
     {
         return _departmentService.RemoveDepartment(id);
     }
-
-    #endregion Departments
-
-    #region Posts
-
-    [HttpPost("/departments/savePost")]
-    public Result SavePost([FromBody] PostBlank postBlank)
-    {
-        return _departmentService.SavePost(postBlank);
-    }
-
-    [HttpPost("/departments/removePost")]
-    public Result RemovePost([FromBody] Guid id)
-    {
-        return _departmentService.RemovePost(id);
-    }
-
-    #endregion Posts
 }

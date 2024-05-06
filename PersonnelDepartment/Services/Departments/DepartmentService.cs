@@ -26,6 +26,11 @@ public class DepartmentService : IDepartmentService
         return Result.Success();
     }
 
+    public Department[] GetDepartments()
+    {
+        return _departmentsRepository.GetDepartments();
+    }
+
     private void PreprocessDepartmentBlank(DepartmentBlank departmentBlank)
     {
         departmentBlank.Id ??= Guid.NewGuid();
@@ -103,6 +108,11 @@ public class DepartmentService : IDepartmentService
     public Post? GetPost(Guid id)
     {
         return _departmentsRepository.GetPost(id);
+    }
+
+    public Post[] GetPosts(Guid departmentId)
+    {
+        return _departmentsRepository.GetPosts(departmentId);
     }
 
     public Result RemovePost(Guid id)

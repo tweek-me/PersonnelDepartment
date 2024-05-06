@@ -3,6 +3,7 @@
 public class Employee
 {
     public Guid Id { get; }
+    public Guid DepartmentId { get; }
     public Guid PostId { get; }
     public String Name { get; }
     public String Surname { get; }
@@ -17,13 +18,14 @@ public class Employee
     public Boolean IsDismissed { get; }
 
     public Employee(
-        Guid id, Guid postId, String name, String surname,
+        Guid id, Guid departmentId, Guid postId, String name, String surname,
         String partronymic, String phoneNumber, String email,
         String inn, String snils, Int32 passportSeries, Int64 passportNumber,
         DateTime birthDay, Boolean isDismissed
     )
     {
         Id = id;
+        DepartmentId = departmentId;
         PostId = postId;
         Name = name;
         Surname = surname;
