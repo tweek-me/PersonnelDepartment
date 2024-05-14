@@ -1,4 +1,4 @@
-//TASK ILYA переписать
+//TASK переписать
 export class Result {
 	public isSuccess = this.errors.length === 0;
 

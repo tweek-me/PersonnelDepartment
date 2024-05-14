@@ -89,7 +89,7 @@ public class EmployeeRepository : BaseRepository, IEmployeeRepository
         return _mainConnector.Get<EmployeeDb?>(expression, parameters)?.ToEmployee();
     }
 
-    //TASK ILYA поменять Limit offset везде, где тянутся page
+    //TASK поменять Limit offset везде, где тянутся page
     public Page<Employee> GetEmployeesPage(Int32 page, Int32 pageSize)
     {
         (Int32 offset, Int32 limit) = NormalizeRange(page, pageSize);

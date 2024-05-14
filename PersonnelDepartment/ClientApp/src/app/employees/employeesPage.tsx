@@ -16,13 +16,13 @@ interface Pagination {
     totalRows: number
 }
 
-//TASK ILYA добавить разделители таблице
+//TASK добавить разделители таблице
 export function EmployeesPage() {
 
     const { showNotification } = useNotification();
 
     const [employees, setEmployees] = useState<Employee[]>([]);
-    //TASK ILYA pageSize = 15
+    //TASK pageSize = 15
     const [pagination, setPagination] = useState<Pagination>({
         page: 1,
         pageSize: 1,

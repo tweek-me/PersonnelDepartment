@@ -39,7 +39,7 @@ public class EmployeeService : IEmployeeService
 
             if (!existEmployee.IsDismissed && employeeBlank.IsDismissed)
             {
-                //TASK ILYA сохранение приказа об увольнении
+                //TASK сохранение приказа об увольнении
             }
         }
 

@@ -21,7 +21,7 @@ export function EmployeeEditModal(props: IProps) {
     const [departments, setDepartments] = useState<Department[]>([]);
     const [posts, setPosts] = useState<Post[]>([]);
 
-    //TASK ILYA сделать blockUi
+    //TASK сделать blockUi
     useEffect(() => {
         async function init() {
             if (props.employeeId != null) {
@@ -137,7 +137,7 @@ export function EmployeeEditModal(props: IProps) {
                         <Typography variant="h6">Контактные данные</Typography>
                     </Grid>
 
-                    {/* TASK ILYA сделать phoneInput */}
+                    {/* TASK  сделать phoneInput */}
                     <Grid item xs={12} md={6}>
                         <TextField
                             fullWidth
@@ -146,7 +146,7 @@ export function EmployeeEditModal(props: IProps) {
                             onChange={event => setEmployeeBlank(blank => ({ ...blank, phoneNumber: event.target.value }))}
                         />
                     </Grid>
-                    {/* TASK ILYA сделать email input */}
+                    {/* TASK сделать email input */}
                     <Grid item xs={12} md={6}>
                         <TextField
                             fullWidth
