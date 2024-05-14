@@ -1,7 +1,10 @@
 import EditIcon from '@mui/icons-material/Edit';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import { Box, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Box, Button, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useEffect, useState } from "react";
+import { ConfirmModal } from '../../components/modal/confirmModal';
+import { useNotification } from '../../components/notifications/notifications';
+import { Page } from '../../components/page/page';
 import { CPagination } from '../../components/pagination/cPagination';
 import { Employee } from "../../domain/employees/employee";
 import { EmployeeProvider } from "../../domain/employees/employeeProvider";
@@ -13,41 +16,83 @@ interface Pagination {
     totalRows: number
 }
 
+//TASK ILYA добавить разделители таблице
 export function EmployeesPage() {
 
+    const { showNotification } = useNotification();
+
     const [employees, setEmployees] = useState<Employee[]>([]);
+    //TASK ILYA pageSize = 15
     const [pagination, setPagination] = useState<Pagination>({
         page: 1,
-        pageSize: 15,
+        pageSize: 1,
         totalRows: 0
     })
 
     const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+    const [isRemoveModalOpen, setIsRemoveModalOpen] = useState<boolean>(false);
+
+    const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
 
     useEffect(() => {
-        async function init() {
-            const employeesPage = await EmployeeProvider.getPage(pagination.page, pagination.pageSize);
-            setPagination(pagination => ({ ...pagination, totalRows: employeesPage.totalRows }));
-            setEmployees(employeesPage.values);
-        }
+        loadEmployeesPage();
+    }, [pagination.page])
 
-        init();
-    }, [])
+    async function loadEmployeesPage() {
+        const employeesPage = await EmployeeProvider.getPage(pagination.page, pagination.pageSize);
+        setPagination(pagination => ({ ...pagination, totalRows: employeesPage.totalRows }));
+        setEmployees(employeesPage.values);
+    }
 
     function buildEmployeeFIO(employee: Employee) {
         return `${employee.surname} ${employee.name} ${employee.partronymic}`;
     }
 
+    function onAddEmployeeClick() {
+        setSelectedEmployee(null);
+        setIsEditModalOpen(true);
+    }
+
+    function onEditEmployeeClick(employee: Employee) {
+        setSelectedEmployee(employee);
+        setIsEditModalOpen(true)
+    }
+
+    function onSaveEmployee() {
+        setIsEditModalOpen(false);
+        loadEmployeesPage();
+    }
+
+    function onRemoveEmployeeClick(employee: Employee) {
+        setSelectedEmployee(employee);
+        setIsRemoveModalOpen(true);
+    }
+
+    async function removeEmployee() {
+        if (selectedEmployee == null) return;
+
+        const result = await EmployeeProvider.remove(selectedEmployee.id);
+        if (!result.isSuccess) showNotification(result.errors[0], 'error');
+
+        showNotification('Успешно', 'success');
+        setIsRemoveModalOpen(false);
+        loadEmployeesPage();
+    }
+
     return (
-        <Box>
-            <CPagination
-                pageSize={pagination.pageSize}
-                onChangePage={page => setPagination(pagination => ({ ...pagination, page }))}
-                totalRows={pagination.totalRows}
-            />
+        <Page>
+            <Box marginTop={7} marginBottom={2}>
+                <Button
+                    variant='contained'
+                    color='info'
+                    onClick={onAddEmployeeClick}
+                >
+                    Добавить работника
+                </Button>
+            </Box>
             <TableContainer component={Paper} sx={{ borderRadius: 3 }}>
                 <Table>
-                    <TableHead>
+                    <TableHead sx={{ backgroundColor: '#99CCFF' }}>
                         <TableRow>
                             <TableCell align='center'>ФИО</TableCell>
                             <TableCell align='center'>Номер телефона</TableCell>
@@ -61,18 +106,18 @@ export function EmployeesPage() {
                         {
                             employees.length !== 0
                                 ? employees.map(employee => (
-                                    <TableRow hover>
-                                        <TableCell>{buildEmployeeFIO(employee)}</TableCell>
-                                        <TableCell>{employee.phoneNumber}</TableCell>
-                                        <TableCell>{employee.inn}</TableCell>
-                                        <TableCell>{employee.snils}</TableCell>
+                                    <TableRow key={employee.id} hover>
+                                        <TableCell align='center'>{buildEmployeeFIO(employee)}</TableCell>
+                                        <TableCell align='center'>{employee.phoneNumber}</TableCell>
+                                        <TableCell align='center'>{employee.inn}</TableCell>
+                                        <TableCell align='center'>{employee.snils}</TableCell>
                                         <TableCell align='center'>{employee.isDismissed ? "Да" : "Нет"}</TableCell>
                                         <TableCell>
                                             <Box justifyContent={'flex-end'} display={'flex'} gap={2}>
-                                                <IconButton onClick={() => setIsEditModalOpen(true)}>
+                                                <IconButton onClick={() => onEditEmployeeClick(employee)}>
                                                     <EditIcon />
                                                 </IconButton>
-                                                <IconButton>
+                                                <IconButton onClick={() => onRemoveEmployeeClick(employee)}>
                                                     <PersonRemoveIcon />
                                                 </IconButton>
                                             </Box>
@@ -86,12 +131,31 @@ export function EmployeesPage() {
                         }
                     </TableBody>
                 </Table>
-            </TableContainer>
+            </TableContainer >
+            <Box display={'flex'} justifyContent={'center'} padding={2}>
+                <CPagination
+                    pageSize={pagination.pageSize}
+                    onChangePage={page => setPagination(pagination => ({ ...pagination, page }))}
+                    totalRows={pagination.totalRows}
+                />
+            </Box>
 
             {
                 isEditModalOpen &&
-                <EmployeeEditModal setIsOpen={setIsEditModalOpen} />
+                <EmployeeEditModal
+                    employeeId={selectedEmployee?.id ?? null}
+                    onSave={onSaveEmployee}
+                    onClose={() => setIsEditModalOpen(false)}
+                />
             }
-        </Box>
+            {
+                isRemoveModalOpen &&
+                <ConfirmModal
+                    title='Вы уверены, что хотите удалить сотрудника?'
+                    onYesClick={removeEmployee}
+                    onClose={() => setIsRemoveModalOpen(false)}
+                />
+            }
+        </Page >
     )
 }

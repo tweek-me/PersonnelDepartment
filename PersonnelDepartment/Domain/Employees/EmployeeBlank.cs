@@ -3,7 +3,7 @@
 public class EmployeeBlank
 {
     public Guid? Id { get; set; }
-    public Guid DepartmentId { get; set; }
+    public Guid? DepartmentId { get; set; }
     public Guid? PostId { get; set; }
     public String? Name { get; set; }
     public String? Surname { get; set; }

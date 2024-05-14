@@ -64,9 +64,9 @@ public class ContractsRepository : BaseRepository, IContractsRepository
             SELECT COUNT(*) OVER() AS totalRows, c.* FROM (
                 SELECT * FROM contracts
                 WHERE isremoved = FALSE
-                OFFSET @p_offset
-                LIMIT @p_limit
             ) AS c
+            OFFSET @p_offset
+            LIMIT @p_limit
             """;
 
         NpgsqlParameter[] parameters =

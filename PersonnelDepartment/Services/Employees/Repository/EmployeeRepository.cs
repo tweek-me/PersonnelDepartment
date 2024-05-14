@@ -21,12 +21,12 @@ public class EmployeeRepository : BaseRepository, IEmployeeRepository
         String expression = """
             INSERT INTO employees
             (
-                id, postid, name, surname, patronymic, phonenumber,
+                id, departmentid, postid, name, surname, patronymic, phonenumber,
                 email, inn, snils, passportseries, passportnumber, 
                 birthday, isdismissed, createddatetimeutc, isremoved
             )
             VALUES (
-               @p_id, @p_postId, @p_name, @p_surname, @p_patronymic, 
+               @p_id, @p_departmentId, @p_postId, @p_name, @p_surname, @p_patronymic, 
                @p_phoneNumber, @p_email, @p_inn, @p_snils, 
                @p_passportSeries, @p_passportNumber,
                @p_birthDay, @p_isDismissed, @p_currentDateTimeUtc, 
@@ -35,6 +35,7 @@ public class EmployeeRepository : BaseRepository, IEmployeeRepository
             )
             ON CONFLICT (id) DO
             UPDATE SET
+                departmentid = @p_departmentId,
                 postid = @p_postId,
                 name = @p_name,
                 surname = @p_surname,
@@ -53,6 +54,7 @@ public class EmployeeRepository : BaseRepository, IEmployeeRepository
         NpgsqlParameter[] parameters =
         {
             new("p_id", employeeBlank.Id),
+            new("p_departmentId", employeeBlank.DepartmentId),
             new("p_postId", employeeBlank.PostId),
             new("p_name", employeeBlank.Name),
             new("p_surname", employeeBlank.Surname),
@@ -87,17 +89,19 @@ public class EmployeeRepository : BaseRepository, IEmployeeRepository
         return _mainConnector.Get<EmployeeDb?>(expression, parameters)?.ToEmployee();
     }
 
+    //TASK ILYA поменять Limit offset везде, где тянутся page
     public Page<Employee> GetEmployeesPage(Int32 page, Int32 pageSize)
     {
         (Int32 offset, Int32 limit) = NormalizeRange(page, pageSize);
 
-        String experssion = """
+        String expression = """
             SELECT COUNT(*) OVER() AS totalRows, emp.* FROM (
                 SELECT * FROM employees
                 WHERE isremoved = FALSE
-                OFFSET @p_offset
-                LIMIT @p_limit
+                
             ) AS emp
+            OFFSET @p_offset
+            LIMIT @p_limit
             """;
 
         NpgsqlParameter[] parameters =
@@ -106,7 +110,7 @@ public class EmployeeRepository : BaseRepository, IEmployeeRepository
             new("p_limit", limit)
         };
 
-        Page<EmployeeDb> dbPage = _mainConnector.GetPage<EmployeeDb>(experssion, parameters);
+        Page<EmployeeDb> dbPage = _mainConnector.GetPage<EmployeeDb>(expression, parameters);
         return new Page<Employee>(dbPage.TotalRows, dbPage.Values.ToEmployees());
     }
 

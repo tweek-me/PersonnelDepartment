@@ -73,8 +73,10 @@ public class DepartmentsRepository : BaseRepository, IDepartmentsRepository
         (Int32 offset, Int32 limit) = NormalizeRange(page, pageSize);
 
         String expression = """
-            SELECT * FROM departments
-            WHERE isremoved = FALSE
+            SELECT COUNT(*) OVER() AS totalRows, d.* (
+                SELECT * FROM departments
+                WHERE isremoved = FALSE
+            ) as d
             OFFSET @p_offset
             LIMIT @p_limit
             """;

@@ -9,7 +9,7 @@ export class PostsProvider {
     }
 
     public static async getPosts(departmentId: string): Promise<Post[]> {
-        const any = await axios.get('/posts/getPosts', { params: departmentId })
+        const any = await axios.get('/posts/getPosts', { params: { departmentId } })
         return mapToPosts(any.data);
     }
 }

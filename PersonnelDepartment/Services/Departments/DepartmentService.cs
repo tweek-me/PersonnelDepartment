@@ -26,6 +26,11 @@ public class DepartmentService : IDepartmentService
         return Result.Success();
     }
 
+    public Department? GetDepartment(Guid id)
+    {
+        return _departmentsRepository.GetDepartment(id);
+    }
+
     public Department[] GetDepartments()
     {
         return _departmentsRepository.GetDepartments();
@@ -43,11 +48,6 @@ public class DepartmentService : IDepartmentService
         if (departmentBlank.PhoneNumber is null) return Result.Fail("Указан некорректный номер телефона");
 
         return Result.Success();
-    }
-
-    private Department? GetDepartment(Guid id)
-    {
-        return _departmentsRepository.GetDepartment(id);
     }
 
     public Page<DepartmentStructure> GetDepartmentStructure(Int32 page, Int32 pageSize)

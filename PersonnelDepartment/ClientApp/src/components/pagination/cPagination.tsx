@@ -1,4 +1,4 @@
-import { Box, Pagination, SxProps } from "@mui/material"
+import { Pagination, SxProps } from "@mui/material"
 
 interface IProps {
     totalRows: number

@@ -165,6 +165,7 @@ Date.prototype.toDateOnly = function (): DateOnly {
 
 export enum DateTimeFormatType {
     date,
+    standardDate,
     dateWithTime,
     dateWithShortTime,
     dateWithShortYear,
@@ -178,6 +179,7 @@ export namespace DateTimeFormatType {
     export function getFormat(type: DateTimeFormatType): string {
         switch (type) {
             case DateTimeFormatType.date: return 'dd.MM.yyyy';
+            case DateTimeFormatType.standardDate: return 'yyyy-MM-dd';
             case DateTimeFormatType.dateWithTime: return 'dd.MM.yyyy HH:mm:ss';
             case DateTimeFormatType.dateWithShortTime: return 'dd.MM.yyyy HH:mm';
             case DateTimeFormatType.dateWithShortYear: return 'dd.MM.yy';

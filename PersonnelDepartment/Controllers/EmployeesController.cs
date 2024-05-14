@@ -19,16 +19,18 @@ public class EmployeesController : BaseController
     public IActionResult Index() => ReactApp();
 
 
+    public record SaveEmployeeRequest(EmployeeBlank EmployeeBlank);
+
     [HttpPost("/employees/save")]
-    public Result SaveEmployee([FromBody] EmployeeBlank employeeBlank)
+    public Result SaveEmployee([FromBody] SaveEmployeeRequest request)
     {
-        return _employeeService.SaveEmployee(employeeBlank);
+        return _employeeService.SaveEmployee(request.EmployeeBlank);
     }
 
     [HttpGet("/employees/get")]
-    public Employee? GetEmployee(Guid id)
+    public Employee? GetEmployee(Guid employeeId)
     {
-        return _employeeService.GetEmployee(id);
+        return _employeeService.GetEmployee(employeeId);
     }
 
     [HttpGet("/employees/getPage")]
@@ -37,9 +39,11 @@ public class EmployeesController : BaseController
         return _employeeService.GetEmployeesPage(page, pageSize);
     }
 
+    public record RemoveEmployeeRequest(Guid EmployeeId);
+
     [HttpPost("/employees/remove")]
-    public Result SaveEmployee([FromBody] Guid employeeId)
+    public Result RemoveEmployee([FromBody] RemoveEmployeeRequest request)
     {
-        return _employeeService.RemoveEmployee(employeeId);
+        return _employeeService.RemoveEmployee(request.EmployeeId);
     }
 }

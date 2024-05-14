@@ -1,4 +1,5 @@
-﻿using PersonnelDepartment.Domain.Employees;
+﻿using PersonnelDepartment.Domain.Departments;
+using PersonnelDepartment.Domain.Employees;
 using PersonnelDepartment.Domain.Posts;
 using PersonnelDepartment.Services.Departments;
 using PersonnelDepartment.Services.Employees.Repository;
@@ -51,10 +52,16 @@ public class EmployeeService : IEmployeeService
     {
         employeeBlank.Id ??= Guid.NewGuid();
         employeeBlank.PhoneNumber = employeeBlank.PhoneNumber.NormalizePhoneNumber();
+        employeeBlank.BirthDay ??= DateTime.Now;
     }
 
     private Result ValidateEmployee(EmployeeBlank employeeBlank)
     {
+        if (employeeBlank.DepartmentId is not { } departmentId) return Result.Fail("Не указан отдел, в котором работает сотрудник");
+
+        Department? department = _departmentService.GetDepartment(departmentId);
+        if (department is null) return Result.Fail("Указанный отдел не найден");
+
         if (employeeBlank.PostId is not { } postId) return Result.Fail("Не указана должность сотрудника");
 
         Post? post = _departmentService.GetPost(postId);
@@ -74,7 +81,7 @@ public class EmployeeService : IEmployeeService
         if (employeeBlank.PassportSeries is null) return Result.Fail("Не указана серия паспорта");
         if (employeeBlank.PassportNumber is null) return Result.Fail("Не указан номер паспорта");
 
-        if (employeeBlank.BirthDay is not { } birthDay || birthDay < DateTime.Now) return Result.Fail("Некорректная дата рождения");
+        if (employeeBlank.BirthDay is not { } birthDay || birthDay.Date > DateTime.Now.Date) return Result.Fail("Некорректная дата рождения");
 
         return Result.Success();
     }

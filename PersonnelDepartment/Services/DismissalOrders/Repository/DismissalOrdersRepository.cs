@@ -67,9 +67,9 @@ public class DismissalOrdersRepository : BaseRepository, IDismissalOrdersReposit
             SELECT COUNT(*) OVER() AS totalRows, d.* FROM (
                 SELECT * FROM dismissalorders
                 WHERE isremoved = FALSE
-                OFFSET @p_offset
-                LIMIT @p_limit
             ) AS d
+            OFFSET @p_offset
+            LIMIT @p_limit
             """;
 
         NpgsqlParameter[] parameters =

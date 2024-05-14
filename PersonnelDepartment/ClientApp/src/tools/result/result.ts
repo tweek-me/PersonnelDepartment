@@ -1,18 +1,17 @@
 //TASK ILYA переписать
-export class Result<T> {
+export class Result {
 	public isSuccess = this.errors.length === 0;
 
 	constructor(
-		public data: T | null,
-		public errors: string[],
+		public errors: string[]
 	) { }
 
-	public static success<T>(value: T | null = null): Result<T> {
-		return new Result<T>(value, []);
+	public static success(): Result {
+		return new Result([]);
 	}
 
-	public static failed(errors: string[]): Result<null> {
-		return new Result(null, errors);
+	public static failed(errors: string[]): Result {
+		return new Result(errors);
 	}
 }
 

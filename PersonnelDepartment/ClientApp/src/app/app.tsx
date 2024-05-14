@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom/client';
-import { Notifications } from '../components/notifications/notifications';
+import { NotificationProvider } from '../components/notifications/notifications';
 import { MainRouter } from './mainRouter';
 
 const root = ReactDOM.createRoot(
@@ -8,8 +8,9 @@ const root = ReactDOM.createRoot(
 
 root.render(
     <>
-        <Notifications />
-        <MainRouter />
+        <NotificationProvider>
+            <MainRouter />
+        </NotificationProvider>
     </>
 );
 
