@@ -1,16 +1,16 @@
 import ReactDOM from 'react-dom/client';
-import { NotificationProvider } from '../components/notifications/notifications';
+import { Notifications } from '../components/notifications/notifications';
 import { MainRouter } from './mainRouter';
+import { Box } from '@mui/material';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 
 root.render(
-    <>
-        <NotificationProvider>
-            <MainRouter />
-        </NotificationProvider>
-    </>
+    <Box>
+        <Notifications />
+        <MainRouter />
+    </Box>
 );
 

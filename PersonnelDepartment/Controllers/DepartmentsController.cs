@@ -19,10 +19,18 @@ public class DepartmentsController : BaseController
     [HttpGet("/departments")]
     public IActionResult Index() => ReactApp();
 
+    public record SaveDepartmentRequest(DepartmentBlank DepartmentBlank);
+
     [HttpPost("/departments/saveDepartment")]
-    public Result SaveDepartment([FromBody] DepartmentBlank departmentBlank)
+    public Result SaveDepartment([FromBody] SaveDepartmentRequest request)
     {
-        return _departmentService.SaveDepartment(departmentBlank);
+        return _departmentService.SaveDepartment(request.DepartmentBlank);
+    }
+
+    [HttpGet("/departments/getDepartment")]
+    public Department? GetDepartment(Guid departmentId)
+    {
+        return _departmentService.GetDepartment(departmentId);
     }
 
     [HttpGet("/departments/getDepartments")]
@@ -37,9 +45,11 @@ public class DepartmentsController : BaseController
         return _departmentService.GetDepartmentStructure(page, pageSize);
     }
 
+    public record RemoveDepartmentRequest(Guid DepartmentId);
+
     [HttpPost("/departments/removeDepartment")]
-    public Result RemoveDepartment([FromBody] Guid id)
+    public Result RemoveDepartment([FromBody] RemoveDepartmentRequest request)
     {
-        return _departmentService.RemoveDepartment(id);
+        return _departmentService.RemoveDepartment(request.DepartmentId);
     }
 }

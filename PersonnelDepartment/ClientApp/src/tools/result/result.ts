@@ -1,16 +1,17 @@
-//TASK переписать
+import { Error } from "../errors/error";
+
 export class Result {
 	public isSuccess = this.errors.length === 0;
 
 	constructor(
-		public errors: string[]
+		public errors: Error[]
 	) { }
 
 	public static success(): Result {
 		return new Result([]);
 	}
 
-	public static failed(errors: string[]): Result {
+	public static failed(errors: Error[]): Result {
 		return new Result(errors);
 	}
 }
@@ -18,9 +19,13 @@ export class Result {
 export class FailResult {
 	public isSuccess: false = false;
 	public data: null = null;
-	public errors: string[];
+	public errors: Error[];
 
-	constructor(errors: string[]) {
+	public get errorsAsString() {
+		return this.errors[0].errorMessage;
+	}
+
+	constructor(errors: Error[]) {
 		this.errors = errors;
 	}
 }
@@ -28,5 +33,5 @@ export class FailResult {
 export class SuccessResult {
 	public isSuccess: true = true;
 	public data: null = null;
-	public errors: string[] = [];
+	public errors: Error[] = [];
 }

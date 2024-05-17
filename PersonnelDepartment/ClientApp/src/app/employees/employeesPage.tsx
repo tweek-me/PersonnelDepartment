@@ -3,11 +3,11 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import { Box, Button, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useEffect, useState } from "react";
 import { ConfirmModal } from '../../components/modal/confirmModal';
-import { useNotification } from '../../components/notifications/notifications';
 import { Page } from '../../components/page/page';
 import { CPagination } from '../../components/pagination/cPagination';
 import { Employee } from "../../domain/employees/employee";
 import { EmployeeProvider } from "../../domain/employees/employeeProvider";
+import { useNotifications } from '../../hooks/useNotifications';
 import { EmployeeEditModal } from './employeeEditModal';
 
 interface Pagination {
@@ -19,7 +19,7 @@ interface Pagination {
 //TASK добавить разделители таблице
 export function EmployeesPage() {
 
-    const { showNotification } = useNotification();
+    const { addErrorNotification, addSuccessNotification } = useNotifications();
 
     const [employees, setEmployees] = useState<Employee[]>([]);
     //TASK pageSize = 15
@@ -72,9 +72,12 @@ export function EmployeesPage() {
         if (selectedEmployee == null) return;
 
         const result = await EmployeeProvider.remove(selectedEmployee.id);
-        if (!result.isSuccess) showNotification(result.errors[0], 'error');
+        if (!result.isSuccess) {
+            addErrorNotification(result.errors[0].errorMessage);
+            return;
+        }
 
-        showNotification('Успешно', 'success');
+        addSuccessNotification('Успешно');
         setIsRemoveModalOpen(false);
         loadEmployeesPage();
     }
@@ -131,7 +134,7 @@ export function EmployeesPage() {
                         }
                     </TableBody>
                 </Table>
-            </TableContainer >
+            </TableContainer>
             <Box display={'flex'} justifyContent={'center'} padding={2}>
                 <CPagination
                     pageSize={pagination.pageSize}

@@ -55,16 +55,16 @@ public class DepartmentService : IDepartmentService
         Page<Department> departmentsPage = _departmentsRepository.GetDepartments(page, pageSize);
         Department[] departments = departmentsPage.Values;
 
-        Guid[] deparmentIds = departments.Select(d => d.Id).ToArray();
-        Post[] posts = _departmentsRepository.GetPosts(deparmentIds);
+        Guid[] departmentIds = departments.Select(d => d.Id).ToArray();
+        Post[] posts = _departmentsRepository.GetPosts(departmentIds);
 
-        DepartmentStructure[] departmentSrtucture = departments.Select(department =>
+        DepartmentStructure[] departmentStructures = departments.Select(department =>
         {
             Post[] departmentPosts = posts.Where(p => p.DepartmentId == department.Id).ToArray();
             return new DepartmentStructure(department, departmentPosts);
         }).ToArray();
 
-        return new Page<DepartmentStructure>(departmentsPage.TotalRows, departmentSrtucture);
+        return new Page<DepartmentStructure>(departmentsPage.TotalRows, departmentStructures);
     }
 
     public Result RemoveDepartment(Guid id)

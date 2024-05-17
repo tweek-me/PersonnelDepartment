@@ -7,6 +7,7 @@ import { EmployeeBlank } from "../../domain/employees/employeeBlank";
 import { EmployeeProvider } from "../../domain/employees/employeeProvider";
 import { Post } from "../../domain/posts/post";
 import { PostsProvider } from "../../domain/posts/postsProvider";
+import { useNotifications } from "../../hooks/useNotifications";
 import { DateTimeFormatType } from "../../tools/dates";
 
 interface IProps {
@@ -17,6 +18,8 @@ interface IProps {
 
 export function EmployeeEditModal(props: IProps) {
 
+    const { addErrorNotification, addSuccessNotification } = useNotifications();
+
     const [employeeBlank, setEmployeeBlank] = useState<EmployeeBlank>(EmployeeBlank.empty());
     const [departments, setDepartments] = useState<Department[]>([]);
     const [posts, setPosts] = useState<Post[]>([]);
@@ -26,7 +29,7 @@ export function EmployeeEditModal(props: IProps) {
         async function init() {
             if (props.employeeId != null) {
                 const employee = await EmployeeProvider.get(props.employeeId);
-                setEmployeeBlank(employee);
+                setEmployeeBlank(EmployeeBlank.fromEmployee(employee));
             }
 
             const departments = await DepartmentsProvider.getDepartments();
@@ -49,7 +52,9 @@ export function EmployeeEditModal(props: IProps) {
 
     async function saveEmployee() {
         const result = await EmployeeProvider.save(employeeBlank);
-        // if (!result.isSuccess)
+        if (!result.isSuccess) return addErrorNotification(result.errors[0].errorMessage);
+
+        addSuccessNotification('Успешно');
         props.onSave();
     }
 

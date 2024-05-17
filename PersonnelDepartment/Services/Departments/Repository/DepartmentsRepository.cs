@@ -73,7 +73,7 @@ public class DepartmentsRepository : BaseRepository, IDepartmentsRepository
         (Int32 offset, Int32 limit) = NormalizeRange(page, pageSize);
 
         String expression = """
-            SELECT COUNT(*) OVER() AS totalRows, d.* (
+            SELECT COUNT(*) OVER() AS totalRows, d.* FROM (
                 SELECT * FROM departments
                 WHERE isremoved = FALSE
             ) as d
@@ -104,6 +104,7 @@ public class DepartmentsRepository : BaseRepository, IDepartmentsRepository
             new("p_id", id)
         };
 
+        RemovePosts(id);
         _mainConnector.ExecuteNonQuery(expression, parameters);
     }
 
@@ -193,6 +194,22 @@ public class DepartmentsRepository : BaseRepository, IDepartmentsRepository
         NpgsqlParameter[] parameters =
         {
             new("p_id", id)
+        };
+
+        _mainConnector.ExecuteNonQuery(expression, parameters);
+    }
+
+    private void RemovePosts(Guid departmentId)
+    {
+        String expression = """
+            UPDATE posts
+            SET isremoved = TRUE
+            WHERE departmentid = @p_departmentId
+            """;
+
+        NpgsqlParameter[] parameters =
+        {
+            new("p_departmentId", departmentId)
         };
 
         _mainConnector.ExecuteNonQuery(expression, parameters);

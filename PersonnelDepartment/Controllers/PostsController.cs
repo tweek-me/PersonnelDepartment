@@ -14,10 +14,12 @@ public class PostsController : BaseController
         _departmentService = departmentService;
     }
 
+    public record SavePostRequest(PostBlank PostBlank);
+
     [HttpPost("/posts/savePost")]
-    public Result SavePost([FromBody] PostBlank postBlank)
+    public Result SavePost([FromBody] SavePostRequest request)
     {
-        return _departmentService.SavePost(postBlank);
+        return _departmentService.SavePost(request.PostBlank);
     }
 
     [HttpGet("/posts/get")]
@@ -32,9 +34,11 @@ public class PostsController : BaseController
         return _departmentService.GetPosts(departmentId);
     }
 
+    public record RemovePostRequest(Guid PostId);
+
     [HttpPost("/posts/removePost")]
-    public Result RemovePost([FromBody] Guid id)
+    public Result RemovePost([FromBody] RemovePostRequest request)
     {
-        return _departmentService.RemovePost(id);
+        return _departmentService.RemovePost(request.PostId);
     }
 }

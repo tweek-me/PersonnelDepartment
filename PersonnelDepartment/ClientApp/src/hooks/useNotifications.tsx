@@ -14,7 +14,5 @@ export function useNotifications() {
 
     }
 
-    return {
-        addErrorNotification, addSuccessNotification, clearNotifications
-    }
+    return { addErrorNotification, addSuccessNotification, clearNotifications }
 }
