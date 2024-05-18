@@ -2,13 +2,13 @@ import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableH
 import { useEffect, useState } from "react";
 import { ConfirmModal } from "../../components/modal/confirmModal";
 import { Page } from "../../components/page/page";
+import { CPagination } from "../../components/pagination/cPagination";
 import { Department } from "../../domain/departments/department";
 import { DepartmentStructure } from "../../domain/departments/departmentStructure";
 import { DepartmentsProvider } from "../../domain/departments/departmentsProvider";
 import { useNotifications } from "../../hooks/useNotifications";
 import { DepartmentEditModal } from "./departmentEditModal";
 import { DepartmentTableRow } from './departmentTableRow';
-import { CPagination } from "../../components/pagination/cPagination";
 
 interface Pagination {
     page: number;
@@ -23,7 +23,7 @@ export function DepartmentPage() {
     const [departmentStructures, setDepartmentStructures] = useState<DepartmentStructure[]>([]);
     const [pagination, setPagination] = useState<Pagination>({
         page: 1,
-        pageSize: 15,
+        pageSize: 10,
         totalRows: 0
     })
 
@@ -88,6 +88,7 @@ export function DepartmentPage() {
                             departmentStructures.length !== 0
                                 ? departmentStructures.map(structure => (
                                     <DepartmentTableRow
+                                        key={structure.department.id}
                                         departmentStructure={structure}
                                         openDepartmentEditorModal={() => setIsEditDepartmentModalOpen(true)}
                                         openDepartmentRemoveModal={() => setIsRemoveDepartmentModalOpen(true)}

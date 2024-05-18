@@ -11,7 +11,7 @@ export class PostsProvider {
 
     public static async getPost(postId: string): Promise<Post> {
         const any = await axios.get('/posts/get', { params: { postId } })
-        return mapToPost(any);
+        return mapToPost(any.data);
     }
 
     public static async getPosts(departmentId: string): Promise<Post[]> {

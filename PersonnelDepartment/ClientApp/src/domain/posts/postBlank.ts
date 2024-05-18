@@ -8,8 +8,8 @@ export class PostBlank {
         public salary: number | null
     ) { }
 
-    public static empty(): PostBlank {
-        return new PostBlank(null, null, null, null);
+    public static empty(departmentId: string): PostBlank {
+        return new PostBlank(null, departmentId, null, null);
     }
 
     public static fromPost(post: Post): PostBlank {

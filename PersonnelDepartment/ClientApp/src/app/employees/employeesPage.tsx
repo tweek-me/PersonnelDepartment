@@ -22,10 +22,9 @@ export function EmployeesPage() {
     const { addErrorNotification, addSuccessNotification } = useNotifications();
 
     const [employees, setEmployees] = useState<Employee[]>([]);
-    //TASK pageSize = 15
     const [pagination, setPagination] = useState<Pagination>({
         page: 1,
-        pageSize: 1,
+        pageSize: 10,
         totalRows: 0
     })
 

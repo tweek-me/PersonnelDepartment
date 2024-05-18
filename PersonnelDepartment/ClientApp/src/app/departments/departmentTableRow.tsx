@@ -48,6 +48,16 @@ export function DepartmentTableRow(props: IProps) {
         setIsEditPostModalOpen(true);
     }
 
+    function onEditPostClick(post: Post) {
+        setSelectedPost(post);
+        setIsEditPostModalOpen(true);
+    }
+
+    function onRemovePostClick(post: Post) {
+        setSelectedPost(post);
+        setIsRemovePostModalOpen(true)
+    }
+
     async function removePost() {
         if (selectedPost == null) return;
 
@@ -56,6 +66,11 @@ export function DepartmentTableRow(props: IProps) {
 
         addSuccessNotification('Успешно');
         setIsRemovePostModalOpen(false);
+        props.loadDepartmentStructuresPage();
+    }
+
+    function onSavePost() {
+        setIsEditPostModalOpen(false);
         props.loadDepartmentStructuresPage();
     }
 
@@ -115,10 +130,10 @@ export function DepartmentTableRow(props: IProps) {
                                         <TableCell sx={{ paddingLeft: 9 }}>{post.salary}</TableCell>
                                         <TableCell>
                                             <Box justifyContent={'flex-end'} display={'flex'} gap={2}>
-                                                <IconButton onClick={() => onEditDepartmentClick(department)}>
+                                                <IconButton onClick={() => onEditPostClick(post)}>
                                                     <EditIcon />
                                                 </IconButton>
-                                                <IconButton onClick={() => onRemoveDepartmentClick(department)}>
+                                                <IconButton onClick={() => onRemovePostClick(post)}>
                                                     <ClearIcon />
                                                 </IconButton>
                                             </Box>
@@ -134,7 +149,8 @@ export function DepartmentTableRow(props: IProps) {
                 isEditPostModalOpen &&
                 <PostEditModal
                     postId={selectedPost?.id ?? null}
-                    onSave={props.loadDepartmentStructuresPage}
+                    departmentId={department.id}
+                    onSave={onSavePost}
                     onClose={() => setIsEditPostModalOpen(false)}
                 />
             }

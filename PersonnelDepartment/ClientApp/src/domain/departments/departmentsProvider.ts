@@ -12,7 +12,7 @@ export class DepartmentsProvider {
     }
 
     public static async getDepartment(departmentId: string): Promise<Department> {
-        const any = await axios.get('/departments/getDepartments', { params: { departmentId } })
+        const any = await axios.get('/departments/getDepartment', { params: { departmentId } })
         return mapToDepartment(any.data);
     }
 

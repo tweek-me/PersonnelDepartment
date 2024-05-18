@@ -4,7 +4,7 @@
 public class Result
 {
     public Boolean IsSuccess => Errors.Length == 0;
-    public Error Errors { get; set; }
+    public Error[] Errors { get; set; }
 
     public Result(params Error[] errors)
     {

@@ -1,12 +1,13 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, IconButton, TextField, Typography } from "@mui/material";
-import { ClearIcon } from "@mui/x-date-pickers";
+import ClearIcon from '@mui/icons-material/Clear';
 import { useEffect, useState } from "react";
 import { PostBlank } from "../../domain/posts/postBlank";
 import { PostsProvider } from "../../domain/posts/postsProvider";
 import { useNotifications } from "../../hooks/useNotifications";
 
 interface IProps {
-    postId: string | null
+    postId: string | null;
+    departmentId: string;
     onClose: () => void;
     onSave: () => void;
 }
@@ -14,10 +15,11 @@ interface IProps {
 export function PostEditModal(props: IProps) {
     const { addErrorNotification, addSuccessNotification } = useNotifications();
 
-    const [postBlank, setPostBlank] = useState<PostBlank>(PostBlank.empty());
+    const [postBlank, setPostBlank] = useState<PostBlank>(PostBlank.empty(props.departmentId));
 
     useEffect(() => {
         async function init() {
+            console.log(props.postId)
             if (props.postId == null) return;
 
             const post = await PostsProvider.getPost(props.postId);
@@ -65,7 +67,7 @@ export function PostEditModal(props: IProps) {
                         <TextField
                             type="number"
                             fullWidth
-                            label="Номер телефона"
+                            label="Зарплата"
                             value={postBlank.salary}
                             onChange={event => setPostBlank(blank => ({ ...blank, salary: +event.target.value }))}
                         />

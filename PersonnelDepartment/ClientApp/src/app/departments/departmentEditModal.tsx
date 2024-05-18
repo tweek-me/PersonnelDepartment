@@ -1,5 +1,5 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, IconButton, TextField, Typography } from "@mui/material";
-import { ClearIcon } from "@mui/x-date-pickers";
+import ClearIcon from '@mui/icons-material/Clear';
 import { useEffect, useState } from "react";
 import { DepartmentBlank } from "../../domain/departments/departmentBlank";
 import { DepartmentsProvider } from "../../domain/departments/departmentsProvider";
@@ -27,6 +27,8 @@ export function DepartmentEditModal(props: IProps) {
 
         init();
     }, [])
+
+    console.log(departmentBlank)
 
     async function saveDepartment() {
         const result = await DepartmentsProvider.saveDepartment(departmentBlank);

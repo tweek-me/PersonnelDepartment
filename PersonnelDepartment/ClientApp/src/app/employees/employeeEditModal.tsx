@@ -1,5 +1,5 @@
 import { Autocomplete, Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControlLabel, Grid, IconButton, TextField, Typography } from "@mui/material";
-import { ClearIcon } from "@mui/x-date-pickers";
+import ClearIcon from '@mui/icons-material/Clear';
 import { useEffect, useState } from "react";
 import { Department } from "../../domain/departments/department";
 import { DepartmentsProvider } from "../../domain/departments/departmentsProvider";
